@@ -47,16 +47,16 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="vJoyInterfaceWrap">
-      <HintPath>..\..\ThirdParty\vJoy205SDK-120315\vJoyInterfaceWrap.dll</HintPath>
+      <HintPath>..\ThirdParty\vJoy205SDK-120315\vJoyInterfaceWrap.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsInput">
-      <HintPath>..\..\ThirdParty\InputSimulator-20150426\WindowsInput.dll</HintPath>
+      <HintPath>..\ThirdParty\InputSimulator-20150426\WindowsInput.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\..\ThirdParty\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll</HintPath>
+      <HintPath>..\ThirdParty\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +133,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)..\ThirdParty\vJoy205SDK-120315\vJoyInterface.dll" "$(TargetDir)" /Y
+    <PostBuildEvent>xcopy "$(SolutionDir)ThirdParty\vJoy205SDK-120315\vJoyInterface.dll" "$(TargetDir)" /Y
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
