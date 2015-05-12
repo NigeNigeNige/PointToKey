@@ -1,0 +1,96 @@
+﻿<Window x:Class="PointToKey.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:conv="clr-namespace:PointToKey.View.Converter"
+        Title="PointToKey - WORK IN PROGRESS" Height="650" Width="525"
+        SnapsToDevicePixels="True" 
+        KeyDown="Window_KeyDown"
+        >
+    <Window.Resources>
+        <ResourceDictionary Source="Styles.xaml"/>
+        
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Background="AliceBlue">
+            <CheckBox Content="Edit mode" IsChecked="{Binding EditMode, Mode=TwoWay}"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Background="AliceBlue" Visibility="{Binding EditMode, Converter={conv:BoolToVisibilityConverter}}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold">Options</TextBlock>
+                <Button Content="Load" Command="{Binding LoadSettingsCommand}"/>
+                <Button Content="Save" Command="{Binding SaveSettingsCommand}"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Columns:</TextBlock>
+                <xctk:IntegerUpDown Value="{Binding ColumnCount, Mode=TwoWay, FallbackValue=1, Delay=1}" Minimum="1"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Rows:</TextBlock>
+                <xctk:IntegerUpDown Value="{Binding RowCount, Mode=TwoWay, FallbackValue=1, Delay=1}" Minimum="1"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Cell background:</TextBlock>
+                <xctk:ColorPicker SelectedColor="{Binding CellBackgroundColor, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Highlight:</TextBlock>
+                <xctk:ColorPicker SelectedColor="{Binding HighlightColor, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Grid Lines:</TextBlock>
+                <xctk:ColorPicker SelectedColor="{Binding GridLineColor, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Line width:</TextBlock>
+                <xctk:IntegerUpDown Value="{Binding GridLineWidth, Mode=TwoWay, FallbackValue=1, Delay=1}" Minimum="0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Text:</TextBlock>
+                <xctk:ColorPicker SelectedColor="{Binding TextColor, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Text size:</TextBlock>
+                <xctk:IntegerUpDown Value="{Binding TextSize, Mode=TwoWay, FallbackValue=12, Delay=1}" Minimum="4"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Cell margin X:</TextBlock>
+                <xctk:IntegerUpDown Value="{Binding GridCellMarginX, Mode=TwoWay, FallbackValue=0, Delay=1}" Minimum="0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Cell margin Y:</TextBlock>
+                <xctk:IntegerUpDown Value="{Binding GridCellMarginY, Mode=TwoWay, FallbackValue=0, Delay=1}" Minimum="0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Margin:</TextBlock>
+                <xctk:ColorPicker SelectedColor="{Binding MarginColor, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Content="Require clicks to activate" IsChecked="{Binding RequireClicks, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <CheckBox Content="Test mode" IsChecked="{Binding TestMode, Mode=TwoWay}"/>
+                <TextBox Text="Test Area" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" 
+                     AcceptsReturn="True" MaxWidth="150" MaxHeight="150" MinHeight="50" IsEnabled="{Binding TestMode}"/>
+            </StackPanel>
+        </StackPanel>
+
+
+        <Grid Grid.Column="1" Grid.Row="1" x:Name="MainGrid" Background="{Binding MarginColor, Mode=TwoWay, Converter={conv:ColorToSolidBrushConverter}}"  />
+
+
+    </Grid>
+</Window>
