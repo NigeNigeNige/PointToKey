@@ -99,6 +99,7 @@
     <Compile Include="View\Converter\KeyToStringConverter.cs" />
     <Compile Include="View\Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="View\Converter\ColorToSolidBrushConverter.cs" />
+    <Compile Include="View\Converter\MultiThicknessConverter.cs" />
     <Compile Include="View\Converter\RadioButtonCheckedConverter.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
