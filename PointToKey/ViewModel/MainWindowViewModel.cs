@@ -216,6 +216,17 @@ namespace PointToKey.ViewModel
 
         public SerializableDictionary<Point, CellSettings> CellSettings = new SerializableDictionary<Point, CellSettings>();
 
+        public IEnumerable<CellSettings> Cells
+        {
+            get
+            {
+                foreach (var cell in CellSettings)
+                {
+                    yield return cell.Value;
+                }
+            }
+        }
+
         #region Commands
         public ICommand GenerateGridCommand { get; set; }
         public ICommand LoadSettingsCommand { get; set; }
@@ -248,18 +259,23 @@ namespace PointToKey.ViewModel
             {
                 for (int row = 0; row < rowCount; ++row)
                 {
-                    CellSettings[new Point(col, row)] = new CellSettings()
-                    {
-                        CellAction = new CellAction()
-                        {
-                            ActionType = CellActionType.KeyDown,
-                            KeyCode = Key.A,
-                            StringEntryString = "blah"
-                        },
-                        DisplayText = string.Format("col:{0},row:{1}", col, row)
-                    };
+                    GenerateGridCell(col, row);
                 }
             }
+        }
+
+        private void GenerateGridCell(int col, int row)
+        {
+            CellSettings[new Point(col, row)] = new CellSettings()
+            {
+                CellAction = new CellAction()
+                {
+                    ActionType = CellActionType.KeyDown,
+                    KeyCode = Key.A,
+                    StringEntryString = "blah"
+                },
+                DisplayText = string.Format("col:{0},row:{1}", col, row)
+            };
         }
 
         public void ActivateCell(Border cell)

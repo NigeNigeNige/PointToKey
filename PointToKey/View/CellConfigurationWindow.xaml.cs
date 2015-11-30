@@ -66,5 +66,10 @@ namespace PointToKey.View
                 vm.ReceivedKey(e.Key);
             }
         }
+
+        private void AbortButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.WaitingForKey = false;
+        }
     }
 }

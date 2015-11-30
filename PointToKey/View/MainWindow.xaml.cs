@@ -80,102 +80,102 @@ namespace PointToKey
 
         public void GenerateGrid()
         {
-            RemoveGridCells();
+            //RemoveGridCells();
             
-            MainGrid.ColumnDefinitions.Clear();
-            MainGrid.RowDefinitions.Clear();
-            for (int col = 0; col < vm.ColumnCount; ++col)
-            {
-                MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(vm.ColumnCount, GridUnitType.Star) });
-            }
+            //MainGrid.ColumnDefinitions.Clear();
+            //MainGrid.RowDefinitions.Clear();
+            //for (int col = 0; col < vm.ColumnCount; ++col)
+            //{
+            //    MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(vm.ColumnCount, GridUnitType.Star) });
+            //}
 
-            var backgroundBrush = new SolidColorBrush(vm.CellBackgroundColor);
-            var borderBrush = new SolidColorBrush(vm.GridLineColor);
-            var textBrush = new SolidColorBrush(vm.TextColor);
-            var borderThickness = new Thickness(vm.GridLineWidth);
-            var innerMargin = new Thickness(vm.GridCellMarginX, vm.GridCellMarginY, vm.GridCellMarginX, vm.GridCellMarginY);
+            //var backgroundBrush = new SolidColorBrush(vm.CellBackgroundColor);
+            //var borderBrush = new SolidColorBrush(vm.GridLineColor);
+            //var textBrush = new SolidColorBrush(vm.TextColor);
+            //var borderThickness = new Thickness(vm.GridLineWidth);
+            //var innerMargin = new Thickness(vm.GridCellMarginX, vm.GridCellMarginY, vm.GridCellMarginX, vm.GridCellMarginY);
 
-            var middleRow = vm.RowCount / 2;
-            var middleCol = vm.ColumnCount / 2;
+            //var middleRow = vm.RowCount / 2;
+            //var middleCol = vm.ColumnCount / 2;
 
-            for (int row = 0; row < vm.RowCount; ++row)
-            {
-                MainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(vm.RowCount, GridUnitType.Star) });
+            //for (int row = 0; row < vm.RowCount; ++row)
+            //{
+            //    MainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(vm.RowCount, GridUnitType.Star) });
 
-                for (int col = 0; col < vm.ColumnCount; ++col)
-                {
-                    var margin = innerMargin;
-                    if (col == 0)
-                    {
-                        margin.Left = 0;
-                    }
-                    else if (col == vm.ColumnCount - 1)
-                    {
-                        margin.Right = 0;
-                    }
+            //    for (int col = 0; col < vm.ColumnCount; ++col)
+            //    {
+            //        var margin = innerMargin;
+            //        if (col == 0)
+            //        {
+            //            margin.Left = 0;
+            //        }
+            //        else if (col == vm.ColumnCount - 1)
+            //        {
+            //            margin.Right = 0;
+            //        }
 
-                    if (row == 0)
-                    {
-                        margin.Top = 0;
-                    }
-                    else if (row == vm.RowCount - 1)
-                    {
-                        margin.Bottom = 0;
-                    }
+            //        if (row == 0)
+            //        {
+            //            margin.Top = 0;
+            //        }
+            //        else if (row == vm.RowCount - 1)
+            //        {
+            //            margin.Bottom = 0;
+            //        }
 
-                    var border = new Border()
-                    {
-                        Background = backgroundBrush,
-                        BorderBrush = borderBrush,
-                        BorderThickness = borderThickness,
-                        Margin = margin,
-                    };
+            //        var border = new Border()
+            //        {
+            //            Background = backgroundBrush,
+            //            BorderBrush = borderBrush,
+            //            BorderThickness = borderThickness,
+            //            Margin = margin,
+            //        };
 
-                    border.SetValue(Grid.RowProperty, row);
-                    border.SetValue(Grid.ColumnProperty, col);
+            //        border.SetValue(Grid.RowProperty, row);
+            //        border.SetValue(Grid.ColumnProperty, col);
 
-                    var cellPosition = new Point(col, row);
-                    border.Tag = cellPosition; 
+            //        var cellPosition = new Point(col, row);
+            //        border.Tag = cellPosition; 
 
-                    border.MouseEnter += border_MouseEnter;
-                    border.MouseLeave += border_MouseLeave;
-                    border.MouseLeftButtonDown += border_MouseLeftButtonDown;
-                    border.MouseLeftButtonUp += border_MouseLeftButtonUp;
+            //        border.MouseEnter += border_MouseEnter;
+            //        border.MouseLeave += border_MouseLeave;
+            //        border.MouseLeftButtonDown += border_MouseLeftButtonDown;
+            //        border.MouseLeftButtonUp += border_MouseLeftButtonUp;
 
-                    string displayText1 = string.Empty;
-                    string displayText2 = string.Empty;
-                    if (vm.CellSettings.ContainsKey(cellPosition))
-                    {
-                        var cellSetting = vm.CellSettings[cellPosition];
-                        displayText1 = cellSetting.DisplayText;
-                        displayText2 = cellSetting.CellAction.ToString();
-                    }
+            //        string displayText1 = string.Empty;
+            //        string displayText2 = string.Empty;
+            //        if (vm.CellSettings.ContainsKey(cellPosition))
+            //        {
+            //            var cellSetting = vm.CellSettings[cellPosition];
+            //            displayText1 = cellSetting.DisplayText;
+            //            displayText2 = cellSetting.CellAction.ToString();
+            //        }
 
-                    border.Child = new StackPanel()
-                    {
-                        Orientation = Orientation.Vertical,
-                        Children = 
-                        {
-                            new TextBlock()
-                            {
-                                Text = displayText1,
-                                HorizontalAlignment = HorizontalAlignment.Center,
-                                FontSize = vm.TextSize,
-                                Foreground = textBrush
-                            },
-                            new TextBlock()
-                            {
-                                Text = displayText2,
-                                HorizontalAlignment = HorizontalAlignment.Center,
-                                FontSize = vm.TextSize,
-                                Foreground = textBrush
-                            },
-                        }
-                    };                
+            //        border.Child = new StackPanel()
+            //        {
+            //            Orientation = Orientation.Vertical,
+            //            Children = 
+            //            {
+            //                new TextBlock()
+            //                {
+            //                    Text = displayText1,
+            //                    HorizontalAlignment = HorizontalAlignment.Center,
+            //                    FontSize = vm.TextSize,
+            //                    Foreground = textBrush
+            //                },
+            //                new TextBlock()
+            //                {
+            //                    Text = displayText2,
+            //                    HorizontalAlignment = HorizontalAlignment.Center,
+            //                    FontSize = vm.TextSize,
+            //                    Foreground = textBrush
+            //                },
+            //            }
+            //        };                
 
-                    MainGrid.Children.Add(border);
-                }
-            }
+            //        MainGrid.Children.Add(border);
+            //    }
+            //}
         }
 
         
@@ -226,14 +226,14 @@ namespace PointToKey
 
         private void RemoveGridCells()
         {
-            foreach (var item in MainGrid.Children.OfType<Border>())
-            {
-                item.MouseLeave -= border_MouseLeave;
-                item.MouseEnter -= border_MouseEnter;
-                item.MouseLeftButtonDown -= border_MouseLeftButtonDown;
-                item.MouseLeftButtonUp -= border_MouseLeftButtonUp;
-            }
-            MainGrid.Children.Clear();
+            //foreach (var item in MainGrid.Children.OfType<Border>())
+            //{
+            //    item.MouseLeave -= border_MouseLeave;
+            //    item.MouseEnter -= border_MouseEnter;
+            //    item.MouseLeftButtonDown -= border_MouseLeftButtonDown;
+            //    item.MouseLeftButtonUp -= border_MouseLeftButtonUp;
+            //}
+            //MainGrid.Children.Clear();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

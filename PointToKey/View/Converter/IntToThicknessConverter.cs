@@ -21,20 +21,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
 namespace PointToKey.View.Converter
 {
-    internal class ColorToSolidBrushConverter : BaseConverter, IValueConverter
+    internal class IntToThicknessConverter : BaseConverter, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             try
             {
-                var color = (Color)value;
-                var brush = new SolidColorBrush(color);
-                return brush;
+                var t = (int)value;
+                var thickness = new Thickness(t);
+                return thickness;
             }
             catch
             {

@@ -20,21 +20,31 @@
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" Style="{StaticResource NoMarginSP}">
                                 <TextBlock Text="Keydown" Style="{StaticResource RightMarginTextBlock}"/>
-                                <Button Content="Set key" Style="{StaticResource NoMarginButton}" Click="SetKey_Click"
-                                        Visibility="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}}, Converter={conv:BoolToVisibilityConverter}}"/>
+                                <StackPanel Orientation="Horizontal" Style="{StaticResource NoMarginSP}"
+                                            Visibility="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}}, Converter={conv:BoolToVisibilityConverter}}">
+                                    <TextBlock Text="Key:"/>
+                                    <TextBlock Text="{Binding CellSettings.CellAction.KeyCode, Converter={conv:KeyToStringConverter}}"/>
+                                    <Button Content="Set" Style="{StaticResource NoMarginButton}" Click="SetKey_Click"/>
+                                </StackPanel>
                             </StackPanel>
                         </RadioButton.Content>
                     </RadioButton>
+                    
                     <RadioButton GroupName="Activation" IsChecked="{Binding CellSettings.CellAction.ActionType, 
                         Converter={conv:RadioButtonCheckedConverter}, ConverterParameter={x:Static cellaction:CellActionType.KeyPress}}">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" Style="{StaticResource NoMarginSP}">
                                 <TextBlock Text="Keypress (down then up)" Style="{StaticResource RightMarginTextBlock}"/>
-                                <Button Content="Set key" Style="{StaticResource NoMarginButton}" Click="SetKey_Click"
-                                        Visibility="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}}, Converter={conv:BoolToVisibilityConverter}}"/>
+                                <StackPanel Orientation="Horizontal" Style="{StaticResource NoMarginSP}"
+                                            Visibility="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}}, Converter={conv:BoolToVisibilityConverter}}">
+                                    <TextBlock Text="Key:"/>
+                                    <TextBlock Text="{Binding CellSettings.CellAction.KeyCode, Converter={conv:KeyToStringConverter}}"/>
+                                    <Button Content="Set" Style="{StaticResource NoMarginButton}" Click="SetKey_Click"/>
+                                </StackPanel>
                             </StackPanel>
                         </RadioButton.Content>
                     </RadioButton>
+                    
                     <RadioButton GroupName="Activation" IsChecked="{Binding CellSettings.CellAction.ActionType, 
                         Converter={conv:RadioButtonCheckedConverter}, ConverterParameter={x:Static cellaction:CellActionType.StringEntry}}">
                         <RadioButton.Content>
@@ -45,6 +55,7 @@
                             </StackPanel>
                         </RadioButton.Content>
                     </RadioButton>
+                    
                     <RadioButton GroupName="Activation" IsChecked="{Binding CellSettings.CellAction.ActionType, 
                         Converter={conv:RadioButtonCheckedConverter}, ConverterParameter={x:Static cellaction:CellActionType.VJoyButtonsDown}}">
                         <RadioButton.Content>
@@ -60,6 +71,7 @@
                             </StackPanel>
                         </RadioButton.Content>
                     </RadioButton>
+                    
                     <RadioButton GroupName="Activation" IsChecked="{Binding CellSettings.CellAction.ActionType, 
                         Converter={conv:RadioButtonCheckedConverter}, ConverterParameter={x:Static cellaction:CellActionType.VJoyButtonsPress}}">
                         <RadioButton.Content>
@@ -70,8 +82,11 @@
                     </RadioButton>
                 </StackPanel>
             </GroupBox>
-            
-            <TextBlock Text="Press key now" HorizontalAlignment="Center" Visibility="{Binding WaitingForKey, Converter={conv:BoolToVisibilityConverter}}"/>
+
+            <StackPanel Orientation="Vertical" Visibility="{Binding WaitingForKey, Converter={conv:BoolToVisibilityConverter}}">
+                <TextBlock Text="Press key now" HorizontalAlignment="Center" />
+                <Button Content="Abort" Click="AbortButton_Click"/>
+            </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Style="{StaticResource NoMarginSP}">
                 <Button Content="OK" IsDefault="True" Click="OkButton_Click"/>

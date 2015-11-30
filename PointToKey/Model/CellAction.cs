@@ -33,6 +33,7 @@ namespace PointToKey.Model
     {
         public CellActionType ActionType { get; set; }
 
+        // TOOD: Make this a dependency property
         public Key KeyCode { get; set; }
 
         public string StringEntryString { get; set; }
