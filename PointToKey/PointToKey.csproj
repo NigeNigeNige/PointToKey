@@ -95,6 +95,7 @@
       <DependentUpon>CellConfigurationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Converter\BaseConverter.cs" />
+    <Compile Include="View\Converter\DivideDoubleByIntConverter.cs" />
     <Compile Include="View\Converter\IntToThicknessConverter.cs" />
     <Compile Include="View\Converter\KeyToStringConverter.cs" />
     <Compile Include="View\Converter\BoolToVisibilityConverter.cs" />

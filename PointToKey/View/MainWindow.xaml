@@ -6,6 +6,7 @@
         Title="PointToKey - WORK IN PROGRESS" Height="650" Width="525"
         SnapsToDevicePixels="True" 
         KeyDown="Window_KeyDown"
+        x:Name="TheMainWindow"
         >
     <Window.Resources>
         <ResourceDictionary>
@@ -17,6 +18,7 @@
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
             <conv:IntToThicknessConverter x:Key="IntToThickness"/>
             <conv:MultiMarginConverter x:Key="IntsToThickness"/>
+            <conv:DivideDoubleByIntConverter x:Key="DivideDoubleByInt"/>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -96,16 +98,19 @@
             </StackPanel>
         </StackPanel>
 
-
-        <ItemsControl Grid.Column="1" Grid.Row="1" x:Name="ItemsCtl"
+        <ItemsControl x:Name="ItemsCtl"
+                      Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Cells}" 
-                      Background="{Binding MarginColor, Converter={StaticResource ColorToBrush}}">
+                      Background="{Binding MarginColor, Converter={StaticResource ColorToBrush}}"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
+                      >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel />
-
+                    <UniformGrid Columns="{Binding ColumnCount}" Rows="{Binding RowCount}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.GridLineColor}"
@@ -124,6 +129,7 @@
                                 <Binding ElementName="ItemsCtl" Path="DataContext.GridCellMarginY"/>
                             </MultiBinding>
                         </Border.Margin>
+
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding DisplayText}" 
                                        Foreground="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.TextColor}"
@@ -131,12 +137,12 @@
                                        FontSize="{Binding ElementName=ItemsCtl, Path=DataContext.TextSize}"
                                        />
                         </StackPanel>
-                        
+
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        
+
         <!--<Grid Grid.Column="1" Grid.Row="1" x:Name="MainGrid" 
               
               Background="{Binding MarginColor, Mode=TwoWay, Converter={conv:ColorToSolidBrushConverter}}"  />-->
