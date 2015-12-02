@@ -246,83 +246,73 @@ namespace PointToKey.ViewModel
                         KeyCode = Key.A,
                         StringEntryString = "blah"
                     },
-                    DisplayText = string.Format("col:{0},row:{1}", col, row)
+                    DisplayText = string.Format("col:{0},row:{1}", col, row),
+                    XPosition = col,
+                    YPosition = row
                 };
             }
         }
 
         public void ActivateCell(Border cell)
         {
-            Debug.Assert(cell.Tag != null);
-
             if (TestMode || EditMode == false)
             {
-                var cellPosition = (Point)cell.Tag;
-                if (CellSettings.ContainsKey(cellPosition))
+                var setting = (CellSettings)(cell.DataContext);
+
+                var action = setting.CellAction;
+                switch (action.ActionType)
                 {
-                    var action = CellSettings[cellPosition].CellAction;
-                    switch (action.ActionType)
-                    {
-                        case CellActionType.None:
-                            break;
-                        case CellActionType.KeyDown:
-                            KeyboardInputSender.SendKeyDown(action.KeyCode);
-                            break;
-                        case CellActionType.KeyPress:
-                            KeyboardInputSender.SendKeyPress(action.KeyCode);
-                            break;
-                        case CellActionType.StringEntry:
-                            KeyboardInputSender.SendTextEntry(action.StringEntryString);
-                            break;
-                        case CellActionType.VJoyButtonsDown:
-                            JoystickInputSender.SendButtonsDown(action.VJoyButtons);
-                            break;
-                        case CellActionType.VJoyButtonsPress:
-                            JoystickInputSender.SendButtonsPress(action.VJoyButtons);
-                            break;
-                        default:
-                            throw new Exception("Unknown CellActionType");
-                    }
+                    case CellActionType.None:
+                        break;
+                    case CellActionType.KeyDown:
+                        KeyboardInputSender.SendKeyDown(action.KeyCode);
+                        break;
+                    case CellActionType.KeyPress:
+                        KeyboardInputSender.SendKeyPress(action.KeyCode);
+                        break;
+                    case CellActionType.StringEntry:
+                        KeyboardInputSender.SendTextEntry(action.StringEntryString);
+                        break;
+                    case CellActionType.VJoyButtonsDown:
+                        JoystickInputSender.SendButtonsDown(action.VJoyButtons);
+                        break;
+                    case CellActionType.VJoyButtonsPress:
+                        JoystickInputSender.SendButtonsPress(action.VJoyButtons);
+                        break;
+                    default:
+                        throw new Exception("Unknown CellActionType");
                 }
             }
         }
 
         public void DeactivateCell(Border cell)
         {
-            Debug.Assert(cell.Tag != null);
-
             if (TestMode || EditMode == false)
             {
-                var cellPosition = (Point)cell.Tag;
-                if (CellSettings.ContainsKey(cellPosition))
+                var setting = (CellSettings)(cell.DataContext);
+
+                var action = setting.CellAction;
+                switch (action.ActionType)
                 {
-                    var action = CellSettings[cellPosition].CellAction;
-                    switch (action.ActionType)
-                    {
-                        case CellActionType.KeyDown:
-                            KeyboardInputSender.SendKeyUp(action.KeyCode);
-                            break;
-                        case CellActionType.VJoyButtonsDown:
-                            JoystickInputSender.SendButtonsUp(action.VJoyButtons);
-                            break;
-                    }
+                    case CellActionType.KeyDown:
+                        KeyboardInputSender.SendKeyUp(action.KeyCode);
+                        break;
+                    case CellActionType.VJoyButtonsDown:
+                        JoystickInputSender.SendButtonsUp(action.VJoyButtons);
+                        break;
                 }
             }
         }
 
         public void EditCell(Border cell)
         {
-            Debug.Assert(cell.Tag != null);
+            var setting = (CellSettings)(cell.DataContext);
 
-            var cellPosition = (Point)cell.Tag;
-            if (CellSettings.ContainsKey(cellPosition))
+            var editWindow = new CellConfigurationViewModel(setting);
+            if (editWindow.ShowDialog())
             {
-                var cellSettings = CellSettings[cellPosition];
-                var editWindow = new CellConfigurationViewModel(cellSettings);
-                if (editWindow.ShowDialog())
-                {
-                    OnGenerateGrid();
-                }
+                //TODO: ?
+                OnGenerateGrid();
             }
         }
 
