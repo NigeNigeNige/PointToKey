@@ -42,7 +42,7 @@ namespace PointToKey
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IDisposable
+    public partial class MainWindow : Window
     {
         [DllImport("user32.dll")]
         public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
@@ -60,12 +60,10 @@ namespace PointToKey
             InitializeComponent();
             
             vm = new MainWindowViewModel();
-            vm.GenerateGridCommand = new GenericCommand(GenerateGrid);
             vm.LoadSettingsCommand = new GenericCommand(LoadSettings);
             vm.SaveSettingsCommand = new GenericCommand(SaveSettings);
 
             DataContext = vm;
-            GenerateGrid();
         }
 
         protected override void OnActivated(EventArgs e)
@@ -76,109 +74,7 @@ namespace PointToKey
             WindowInteropHelper helper = new WindowInteropHelper(this);
             SetWindowLong(helper.Handle, GWL_EXSTYLE,
                 GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
-        }
-
-        public void GenerateGrid()
-        {
-            //RemoveGridCells();
-            
-            //MainGrid.ColumnDefinitions.Clear();
-            //MainGrid.RowDefinitions.Clear();
-            //for (int col = 0; col < vm.ColumnCount; ++col)
-            //{
-            //    MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(vm.ColumnCount, GridUnitType.Star) });
-            //}
-
-            //var backgroundBrush = new SolidColorBrush(vm.CellBackgroundColor);
-            //var borderBrush = new SolidColorBrush(vm.GridLineColor);
-            //var textBrush = new SolidColorBrush(vm.TextColor);
-            //var borderThickness = new Thickness(vm.GridLineWidth);
-            //var innerMargin = new Thickness(vm.GridCellMarginX, vm.GridCellMarginY, vm.GridCellMarginX, vm.GridCellMarginY);
-
-            //var middleRow = vm.RowCount / 2;
-            //var middleCol = vm.ColumnCount / 2;
-
-            //for (int row = 0; row < vm.RowCount; ++row)
-            //{
-            //    MainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(vm.RowCount, GridUnitType.Star) });
-
-            //    for (int col = 0; col < vm.ColumnCount; ++col)
-            //    {
-            //        var margin = innerMargin;
-            //        if (col == 0)
-            //        {
-            //            margin.Left = 0;
-            //        }
-            //        else if (col == vm.ColumnCount - 1)
-            //        {
-            //            margin.Right = 0;
-            //        }
-
-            //        if (row == 0)
-            //        {
-            //            margin.Top = 0;
-            //        }
-            //        else if (row == vm.RowCount - 1)
-            //        {
-            //            margin.Bottom = 0;
-            //        }
-
-            //        var border = new Border()
-            //        {
-            //            Background = backgroundBrush,
-            //            BorderBrush = borderBrush,
-            //            BorderThickness = borderThickness,
-            //            Margin = margin,
-            //        };
-
-            //        border.SetValue(Grid.RowProperty, row);
-            //        border.SetValue(Grid.ColumnProperty, col);
-
-            //        var cellPosition = new Point(col, row);
-            //        border.Tag = cellPosition; 
-
-            //        border.MouseEnter += border_MouseEnter;
-            //        border.MouseLeave += border_MouseLeave;
-            //        border.MouseLeftButtonDown += border_MouseLeftButtonDown;
-            //        border.MouseLeftButtonUp += border_MouseLeftButtonUp;
-
-            //        string displayText1 = string.Empty;
-            //        string displayText2 = string.Empty;
-            //        if (vm.CellSettings.ContainsKey(cellPosition))
-            //        {
-            //            var cellSetting = vm.CellSettings[cellPosition];
-            //            displayText1 = cellSetting.DisplayText;
-            //            displayText2 = cellSetting.CellAction.ToString();
-            //        }
-
-            //        border.Child = new StackPanel()
-            //        {
-            //            Orientation = Orientation.Vertical,
-            //            Children = 
-            //            {
-            //                new TextBlock()
-            //                {
-            //                    Text = displayText1,
-            //                    HorizontalAlignment = HorizontalAlignment.Center,
-            //                    FontSize = vm.TextSize,
-            //                    Foreground = textBrush
-            //                },
-            //                new TextBlock()
-            //                {
-            //                    Text = displayText2,
-            //                    HorizontalAlignment = HorizontalAlignment.Center,
-            //                    FontSize = vm.TextSize,
-            //                    Foreground = textBrush
-            //                },
-            //            }
-            //        };                
-
-            //        MainGrid.Children.Add(border);
-            //    }
-            //}
-        }
-
-        
+        }       
 
         void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -222,18 +118,6 @@ namespace PointToKey
                 // Activate the key
                 vm.ActivateCell((Border)sender);
             }
-        }
-
-        private void RemoveGridCells()
-        {
-            //foreach (var item in MainGrid.Children.OfType<Border>())
-            //{
-            //    item.MouseLeave -= border_MouseLeave;
-            //    item.MouseEnter -= border_MouseEnter;
-            //    item.MouseLeftButtonDown -= border_MouseLeftButtonDown;
-            //    item.MouseLeftButtonUp -= border_MouseLeftButtonUp;
-            //}
-            //MainGrid.Children.Clear();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -286,12 +170,6 @@ namespace PointToKey
             }
         }
 
-        #region IDisposable
-        public void Dispose()
-        {
-            RemoveGridCells();
-        }
-        #endregion
 
 
     }

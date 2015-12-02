@@ -6,7 +6,6 @@
         Title="PointToKey - WORK IN PROGRESS" Height="650" Width="525"
         SnapsToDevicePixels="True" 
         KeyDown="Window_KeyDown"
-        x:Name="TheMainWindow"
         >
     <Window.Resources>
         <ResourceDictionary>
@@ -101,13 +100,13 @@
         <ItemsControl x:Name="ItemsCtl"
                       Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Cells}" 
-                      Background="{Binding MarginColor, Converter={StaticResource ColorToBrush}}"
+                      
                       HorizontalAlignment="Stretch"
                       HorizontalContentAlignment="Stretch"
                       >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding ColumnCount}" Rows="{Binding RowCount}" />
+                    <UniformGrid Columns="{Binding ColumnCount}" Rows="{Binding RowCount}" Background="{Binding MarginColor, Converter={StaticResource ColorToBrush}}"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             
@@ -132,6 +131,11 @@
 
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding DisplayText}" 
+                                       Foreground="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.TextColor}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="{Binding ElementName=ItemsCtl, Path=DataContext.TextSize}"
+                                       />
+                            <TextBlock Text="{Binding CellAction}" 
                                        Foreground="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.TextColor}"
                                        HorizontalAlignment="Center"
                                        FontSize="{Binding ElementName=ItemsCtl, Path=DataContext.TextSize}"

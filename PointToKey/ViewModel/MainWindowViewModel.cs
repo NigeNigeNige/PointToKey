@@ -78,10 +78,7 @@ namespace PointToKey.ViewModel
             get { return cellBackgroundColor; }
             set 
             {
-                if (SetValue(ref cellBackgroundColor, value, "CellBackgroundColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref cellBackgroundColor, value, "CellBackgroundColor");
             }
         }
 
@@ -91,10 +88,7 @@ namespace PointToKey.ViewModel
             get { return highlightColor; }
             set
             {
-                if (SetValue(ref highlightColor, value, "HighlightColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref highlightColor, value, "HighlightColor");
             }
         }
 
@@ -104,10 +98,7 @@ namespace PointToKey.ViewModel
             get { return gridLineColor; }
             set
             {
-                if (SetValue(ref gridLineColor, value, "GridLineColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridLineColor, value, "GridLineColor");
             }
         }
 
@@ -117,10 +108,7 @@ namespace PointToKey.ViewModel
             get { return gridLineWidth; }
             set
             {
-                if (SetValue(ref gridLineWidth, value, "GridLineWidth"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridLineWidth, value, "GridLineWidth");
             }
         }
 
@@ -130,10 +118,7 @@ namespace PointToKey.ViewModel
             get { return textColor; }
             set
             {
-                if (SetValue(ref textColor, value, "TextColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref textColor, value, "TextColor");
             }
         }
 
@@ -143,10 +128,7 @@ namespace PointToKey.ViewModel
             get { return textSize; }
             set
             {
-                if (SetValue(ref textSize, value, "TextSize"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref textSize, value, "TextSize");
             }
         }
 
@@ -166,10 +148,7 @@ namespace PointToKey.ViewModel
             get { return gridCellMarginX; }
             set
             {
-                if (SetValue(ref gridCellMarginX, value, "GridCellMarginX"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridCellMarginX, value, "GridCellMarginX");
             }
         }
 
@@ -179,10 +158,7 @@ namespace PointToKey.ViewModel
             get { return gridCellMarginY; }
             set
             {
-                if (SetValue(ref gridCellMarginY, value, "GridCellMarginY"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridCellMarginY, value, "GridCellMarginY");
             }
         }
 
@@ -220,7 +196,7 @@ namespace PointToKey.ViewModel
         {
             get
             {
-                foreach (var cell in CellSettings)
+                foreach (var cell in CellSettings.OrderBy(cs => cs.Key.Y).ThenBy(cs => cs.Key.X))
                 {
                     yield return cell.Value;
                 }
@@ -228,7 +204,6 @@ namespace PointToKey.ViewModel
         }
 
         #region Commands
-        public ICommand GenerateGridCommand { get; set; }
         public ICommand LoadSettingsCommand { get; set; }
         public ICommand SaveSettingsCommand { get; set; }
         #endregion
@@ -242,15 +217,9 @@ namespace PointToKey.ViewModel
 
         private void OnGenerateGrid()
         {
-            if (!CellSettings.Any())
-            {
-                GenerateSampleGrid();
-            }
+            GenerateSampleGrid();
 
-            if (GenerateGridCommand != null)
-            {
-                GenerateGridCommand.Execute(null);
-            }
+            OnPropertyChanged("Cells");
         }
         
         private void GenerateSampleGrid()
@@ -266,16 +235,20 @@ namespace PointToKey.ViewModel
 
         private void GenerateGridCell(int col, int row)
         {
-            CellSettings[new Point(col, row)] = new CellSettings()
+            var point = new Point(col, row);
+            if (CellSettings.ContainsKey(point) == false)
             {
-                CellAction = new CellAction()
+                CellSettings[point] = new CellSettings()
                 {
-                    ActionType = CellActionType.KeyDown,
-                    KeyCode = Key.A,
-                    StringEntryString = "blah"
-                },
-                DisplayText = string.Format("col:{0},row:{1}", col, row)
-            };
+                    CellAction = new CellAction()
+                    {
+                        ActionType = CellActionType.KeyDown,
+                        KeyCode = Key.A,
+                        StringEntryString = "blah"
+                    },
+                    DisplayText = string.Format("col:{0},row:{1}", col, row)
+                };
+            }
         }
 
         public void ActivateCell(Border cell)
