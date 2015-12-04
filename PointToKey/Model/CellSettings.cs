@@ -31,6 +31,10 @@ namespace PointToKey.Model
         public CellAction CellAction { get; set; }
 
         public string DisplayText { get; set; }
+
+        public int XPosition { get; set; }
+
+        public int YPosition { get; set; }
         
     }
 }

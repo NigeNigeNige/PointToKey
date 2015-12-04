@@ -78,10 +78,7 @@ namespace PointToKey.ViewModel
             get { return cellBackgroundColor; }
             set 
             {
-                if (SetValue(ref cellBackgroundColor, value, "CellBackgroundColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref cellBackgroundColor, value, "CellBackgroundColor");
             }
         }
 
@@ -91,10 +88,7 @@ namespace PointToKey.ViewModel
             get { return highlightColor; }
             set
             {
-                if (SetValue(ref highlightColor, value, "HighlightColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref highlightColor, value, "HighlightColor");
             }
         }
 
@@ -104,10 +98,7 @@ namespace PointToKey.ViewModel
             get { return gridLineColor; }
             set
             {
-                if (SetValue(ref gridLineColor, value, "GridLineColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridLineColor, value, "GridLineColor");
             }
         }
 
@@ -117,10 +108,7 @@ namespace PointToKey.ViewModel
             get { return gridLineWidth; }
             set
             {
-                if (SetValue(ref gridLineWidth, value, "GridLineWidth"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridLineWidth, value, "GridLineWidth");
             }
         }
 
@@ -130,10 +118,7 @@ namespace PointToKey.ViewModel
             get { return textColor; }
             set
             {
-                if (SetValue(ref textColor, value, "TextColor"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref textColor, value, "TextColor");
             }
         }
 
@@ -143,10 +128,7 @@ namespace PointToKey.ViewModel
             get { return textSize; }
             set
             {
-                if (SetValue(ref textSize, value, "TextSize"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref textSize, value, "TextSize");
             }
         }
 
@@ -166,10 +148,7 @@ namespace PointToKey.ViewModel
             get { return gridCellMarginX; }
             set
             {
-                if (SetValue(ref gridCellMarginX, value, "GridCellMarginX"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridCellMarginX, value, "GridCellMarginX");
             }
         }
 
@@ -179,10 +158,7 @@ namespace PointToKey.ViewModel
             get { return gridCellMarginY; }
             set
             {
-                if (SetValue(ref gridCellMarginY, value, "GridCellMarginY"))
-                {
-                    OnGenerateGrid();
-                }
+                SetValue(ref gridCellMarginY, value, "GridCellMarginY");
             }
         }
 
@@ -216,8 +192,18 @@ namespace PointToKey.ViewModel
 
         public SerializableDictionary<Point, CellSettings> CellSettings = new SerializableDictionary<Point, CellSettings>();
 
+        public IEnumerable<CellSettings> Cells
+        {
+            get
+            {
+                foreach (var cell in CellSettings.OrderBy(cs => cs.Key.Y).ThenBy(cs => cs.Key.X))
+                {
+                    yield return cell.Value;
+                }
+            }
+        }
+
         #region Commands
-        public ICommand GenerateGridCommand { get; set; }
         public ICommand LoadSettingsCommand { get; set; }
         public ICommand SaveSettingsCommand { get; set; }
         #endregion
@@ -231,15 +217,9 @@ namespace PointToKey.ViewModel
 
         private void OnGenerateGrid()
         {
-            if (!CellSettings.Any())
-            {
-                GenerateSampleGrid();
-            }
+            GenerateSampleGrid();
 
-            if (GenerateGridCommand != null)
-            {
-                GenerateGridCommand.Execute(null);
-            }
+            OnPropertyChanged("Cells");
         }
         
         private void GenerateSampleGrid()
@@ -248,92 +228,91 @@ namespace PointToKey.ViewModel
             {
                 for (int row = 0; row < rowCount; ++row)
                 {
-                    CellSettings[new Point(col, row)] = new CellSettings()
-                    {
-                        CellAction = new CellAction()
-                        {
-                            ActionType = CellActionType.KeyDown,
-                            KeyCode = Key.A,
-                            StringEntryString = "blah"
-                        },
-                        DisplayText = string.Format("col:{0},row:{1}", col, row)
-                    };
+                    GenerateGridCell(col, row);
                 }
+            }
+        }
+
+        private void GenerateGridCell(int col, int row)
+        {
+            var point = new Point(col, row);
+            if (CellSettings.ContainsKey(point) == false)
+            {
+                CellSettings[point] = new CellSettings()
+                {
+                    CellAction = new CellAction()
+                    {
+                        ActionType = CellActionType.KeyDown,
+                        KeyCode = Key.A,
+                        StringEntryString = "blah"
+                    },
+                    DisplayText = string.Format("col:{0},row:{1}", col, row),
+                    XPosition = col,
+                    YPosition = row
+                };
             }
         }
 
         public void ActivateCell(Border cell)
         {
-            Debug.Assert(cell.Tag != null);
-
             if (TestMode || EditMode == false)
             {
-                var cellPosition = (Point)cell.Tag;
-                if (CellSettings.ContainsKey(cellPosition))
+                var setting = (CellSettings)(cell.DataContext);
+
+                var action = setting.CellAction;
+                switch (action.ActionType)
                 {
-                    var action = CellSettings[cellPosition].CellAction;
-                    switch (action.ActionType)
-                    {
-                        case CellActionType.None:
-                            break;
-                        case CellActionType.KeyDown:
-                            KeyboardInputSender.SendKeyDown(action.KeyCode);
-                            break;
-                        case CellActionType.KeyPress:
-                            KeyboardInputSender.SendKeyPress(action.KeyCode);
-                            break;
-                        case CellActionType.StringEntry:
-                            KeyboardInputSender.SendTextEntry(action.StringEntryString);
-                            break;
-                        case CellActionType.VJoyButtonsDown:
-                            JoystickInputSender.SendButtonsDown(action.VJoyButtons);
-                            break;
-                        case CellActionType.VJoyButtonsPress:
-                            JoystickInputSender.SendButtonsPress(action.VJoyButtons);
-                            break;
-                        default:
-                            throw new Exception("Unknown CellActionType");
-                    }
+                    case CellActionType.None:
+                        break;
+                    case CellActionType.KeyDown:
+                        KeyboardInputSender.SendKeyDown(action.KeyCode);
+                        break;
+                    case CellActionType.KeyPress:
+                        KeyboardInputSender.SendKeyPress(action.KeyCode);
+                        break;
+                    case CellActionType.StringEntry:
+                        KeyboardInputSender.SendTextEntry(action.StringEntryString);
+                        break;
+                    case CellActionType.VJoyButtonsDown:
+                        JoystickInputSender.SendButtonsDown(action.VJoyButtons);
+                        break;
+                    case CellActionType.VJoyButtonsPress:
+                        JoystickInputSender.SendButtonsPress(action.VJoyButtons);
+                        break;
+                    default:
+                        throw new Exception("Unknown CellActionType");
                 }
             }
         }
 
         public void DeactivateCell(Border cell)
         {
-            Debug.Assert(cell.Tag != null);
-
             if (TestMode || EditMode == false)
             {
-                var cellPosition = (Point)cell.Tag;
-                if (CellSettings.ContainsKey(cellPosition))
+                var setting = (CellSettings)(cell.DataContext);
+
+                var action = setting.CellAction;
+                switch (action.ActionType)
                 {
-                    var action = CellSettings[cellPosition].CellAction;
-                    switch (action.ActionType)
-                    {
-                        case CellActionType.KeyDown:
-                            KeyboardInputSender.SendKeyUp(action.KeyCode);
-                            break;
-                        case CellActionType.VJoyButtonsDown:
-                            JoystickInputSender.SendButtonsUp(action.VJoyButtons);
-                            break;
-                    }
+                    case CellActionType.KeyDown:
+                        KeyboardInputSender.SendKeyUp(action.KeyCode);
+                        break;
+                    case CellActionType.VJoyButtonsDown:
+                        JoystickInputSender.SendButtonsUp(action.VJoyButtons);
+                        break;
                 }
             }
         }
 
         public void EditCell(Border cell)
         {
-            Debug.Assert(cell.Tag != null);
+            var setting = (CellSettings)(cell.DataContext);
 
-            var cellPosition = (Point)cell.Tag;
-            if (CellSettings.ContainsKey(cellPosition))
+            var editWindow = new CellConfigurationViewModel(setting);
+            if (editWindow.ShowDialog())
             {
-                var cellSettings = CellSettings[cellPosition];
-                var editWindow = new CellConfigurationViewModel(cellSettings);
-                if (editWindow.ShowDialog())
-                {
-                    OnGenerateGrid();
-                }
+                //TODO: ?
+                OnGenerateGrid();
             }
         }
 

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using WindowsInput;
 
@@ -29,15 +30,48 @@ namespace PointToKey.Model
     public enum CellActionType { None, KeyDown, KeyPress, StringEntry, VJoyButtonsDown, VJoyButtonsPress };
 
     [Serializable]
-    public class CellAction
+    public class CellAction : DependencyObject
     {
         public CellActionType ActionType { get; set; }
 
-        public Key KeyCode { get; set; }
+        public Key KeyCode
+        {
+            get { return (Key)GetValue(KeyCodeProperty); }
+            set { SetValue(KeyCodeProperty, value); }
+        }
 
-        public string StringEntryString { get; set; }
+        // Using a DependencyProperty as the backing store for KeyCode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty KeyCodeProperty =
+            DependencyProperty.Register("KeyCode", typeof(Key), typeof(CellAction), new PropertyMetadata(null));
 
-        public int VJoyButtons { get; set; }
+
+
+
+        public string StringEntryString
+        {
+            get { return (string)GetValue(StringEntryStringProperty); }
+            set { SetValue(StringEntryStringProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for StringEntryString.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StringEntryStringProperty =
+            DependencyProperty.Register("StringEntryString", typeof(string), typeof(CellAction), new PropertyMetadata(string.Empty));
+
+
+
+
+        public int VJoyButtons
+        {
+            get { return (int)GetValue(VJoyButtonsProperty); }
+            set { SetValue(VJoyButtonsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for VJoyButtons.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VJoyButtonsProperty =
+            DependencyProperty.Register("VJoyButtons", typeof(int), typeof(CellAction), new PropertyMetadata(0));
+
+
+
 
         public override string ToString()
         {

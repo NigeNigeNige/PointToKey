@@ -21,20 +21,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
+using System.Windows.Input;
 
 namespace PointToKey.View.Converter
 {
-    internal class ColorToSolidBrushConverter : BaseConverter, IValueConverter
+    class KeyToStringConverter : BaseConverter, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             try
             {
-                var color = (Color)value;
-                var brush = new SolidColorBrush(color);
-                return brush;
+                Key keyValue = (Key)value;
+                return keyValue.ToString();
             }
             catch
             {

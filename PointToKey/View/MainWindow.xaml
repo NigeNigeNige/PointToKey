@@ -8,8 +8,17 @@
         KeyDown="Window_KeyDown"
         >
     <Window.Resources>
-        <ResourceDictionary Source="Styles.xaml"/>
-        
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <conv:ColorToSolidBrushConverter x:Key="ColorToBrush"/>
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+            <conv:IntToThicknessConverter x:Key="IntToThickness"/>
+            <conv:MultiMarginConverter x:Key="IntsToThickness"/>
+            <conv:DivideDoubleByIntConverter x:Key="DivideDoubleByInt"/>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
@@ -26,8 +35,8 @@
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Background="AliceBlue">
             <CheckBox Content="Edit mode" IsChecked="{Binding EditMode, Mode=TwoWay}"/>
         </StackPanel>
-        
-        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Background="AliceBlue" Visibility="{Binding EditMode, Converter={conv:BoolToVisibilityConverter}}">
+
+        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Background="AliceBlue" Visibility="{Binding EditMode, Converter={StaticResource BoolToVisibility}}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontWeight="Bold">Options</TextBlock>
                 <Button Content="Load" Command="{Binding LoadSettingsCommand}"/>
@@ -88,8 +97,59 @@
             </StackPanel>
         </StackPanel>
 
+        <ItemsControl x:Name="ItemsCtl"
+                      Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Cells}" 
+                      
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
+                      >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding ColumnCount}" Rows="{Binding RowCount}" Background="{Binding MarginColor, Converter={StaticResource ColorToBrush}}"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.GridLineColor}"
+                            Background="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.CellBackgroundColor}"
+                            BorderThickness="{Binding Converter={StaticResource IntToThickness}, ElementName=ItemsCtl, Path=DataContext.GridLineWidth}"
+                            MouseEnter="border_MouseEnter"
+                            MouseLeave="border_MouseLeave"
+                            MouseLeftButtonDown="border_MouseLeftButtonDown"
+                            MouseLeftButtonUp="border_MouseLeftButtonUp"
+                            >
+                        <Border.Margin>
+                            <MultiBinding Converter="{StaticResource IntsToThickness}">
+                                <Binding ElementName="ItemsCtl" Path="DataContext.GridCellMarginX"/>
+                                <Binding ElementName="ItemsCtl" Path="DataContext.GridCellMarginY"/>
+                                <Binding ElementName="ItemsCtl" Path="DataContext.GridCellMarginX"/>
+                                <Binding ElementName="ItemsCtl" Path="DataContext.GridCellMarginY"/>
+                            </MultiBinding>
+                        </Border.Margin>
 
-        <Grid Grid.Column="1" Grid.Row="1" x:Name="MainGrid" Background="{Binding MarginColor, Mode=TwoWay, Converter={conv:ColorToSolidBrushConverter}}"  />
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding DisplayText}" 
+                                       Foreground="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.TextColor}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="{Binding ElementName=ItemsCtl, Path=DataContext.TextSize}"
+                                       />
+                            <TextBlock Text="{Binding CellAction}" 
+                                       Foreground="{Binding Converter={StaticResource ColorToBrush}, ElementName=ItemsCtl, Path=DataContext.TextColor}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="{Binding ElementName=ItemsCtl, Path=DataContext.TextSize}"
+                                       />
+                        </StackPanel>
+
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!--<Grid Grid.Column="1" Grid.Row="1" x:Name="MainGrid" 
+              
+              Background="{Binding MarginColor, Mode=TwoWay, Converter={conv:ColorToSolidBrushConverter}}"  />-->
 
 
     </Grid>
