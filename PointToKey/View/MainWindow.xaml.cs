@@ -62,6 +62,8 @@ namespace PointToKey
             vm = new MainWindowViewModel();
             vm.LoadSettingsCommand = new GenericCommand(LoadSettings);
             vm.SaveSettingsCommand = new GenericCommand(SaveSettings);
+            vm.GoFullscreenCommand = new GenericCommand(GoFullscreen);
+            vm.LeaveFullscreenCommand = new GenericCommand(LeaveFullscreen);
 
             DataContext = vm;
         }
@@ -168,6 +170,29 @@ namespace PointToKey
             {
                 vm.LoadSettings(dialog.FileName);
             }
+        }
+
+        private WindowState oldWindowState;
+        private WindowStyle oldWindowStyle;
+        private ResizeMode oldResizeMode;
+
+        public void GoFullscreen()
+        {
+            oldWindowState = this.WindowState;
+            this.WindowState = WindowState.Maximized;
+
+            oldWindowStyle = this.WindowStyle;
+            this.WindowStyle = System.Windows.WindowStyle.None;
+
+            oldResizeMode = this.ResizeMode;
+            this.ResizeMode = System.Windows.ResizeMode.NoResize;
+        }
+
+        public void LeaveFullscreen()
+        {
+            this.WindowState = oldWindowState;
+            this.WindowStyle = oldWindowStyle;
+            this.ResizeMode = oldResizeMode;
         }
 
 

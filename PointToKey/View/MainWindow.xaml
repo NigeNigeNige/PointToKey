@@ -4,7 +4,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:conv="clr-namespace:PointToKey.View.Converter"
         Title="PointToKey - WORK IN PROGRESS" Height="650" Width="525"
-        SnapsToDevicePixels="True" 
+        SnapsToDevicePixels="True" WindowStartupLocation="CenterScreen" 
         KeyDown="Window_KeyDown"
         >
     <Window.Resources>
@@ -34,6 +34,7 @@
         
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Background="AliceBlue">
             <CheckBox Content="Edit mode" IsChecked="{Binding EditMode, Mode=TwoWay}"/>
+            <CheckBox Content="Fullscreen" IsChecked="{Binding FullscreenMode, Mode=TwoWay}"/>
         </StackPanel>
 
         <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Background="AliceBlue" Visibility="{Binding EditMode, Converter={StaticResource BoolToVisibility}}">

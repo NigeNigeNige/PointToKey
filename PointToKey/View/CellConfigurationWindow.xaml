@@ -4,7 +4,9 @@
         xmlns:conv="clr-namespace:PointToKey.View.Converter"
         xmlns:cellaction="clr-namespace:PointToKey.Model"
         Title="Cell Configuration" Height="300" Width="500"
-        WindowStyle="SingleBorderWindow" ResizeMode="NoResize" PreviewKeyDown="Window_PreviewKeyDown">
+        WindowStyle="SingleBorderWindow" ResizeMode="NoResize" 
+        WindowStartupLocation="CenterScreen"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
         <ResourceDictionary Source="Styles.xaml"/>
     </Window.Resources>
